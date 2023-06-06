@@ -24,7 +24,7 @@ export class UserService {
   }
 
   async updateUser(id: string, updateUser: UpdateUserDTO) {
-    return this.userModel.findByIdAndUpdate(
+    const userUpdated = await this.userModel.findByIdAndUpdate(
       {
         _id: id,
       },
@@ -33,5 +33,11 @@ export class UserService {
         lean: true,
       },
     );
+
+    return {
+      username: userUpdated.username,
+      email: userUpdated.email,
+      roles: userUpdated.roles,
+    };
   }
 }
