@@ -12,6 +12,8 @@ Simple Ecommerce using NestJS, MongoDB
 ## Installation
 
 ```bash
+$ cp .env.example .env
+
 $ yarn install
 
 $ docker compose up -d
