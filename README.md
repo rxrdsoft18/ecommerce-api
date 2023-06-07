@@ -1,5 +1,5 @@
 ## Simple Ecommerce
-Simple Ecommerce using NestJS, MongoDB
+Simple Ecommerce using NestJS, MongoDB, JWT
 
 ## Technologies
 - NestJS
