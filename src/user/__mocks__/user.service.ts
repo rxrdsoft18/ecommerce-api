@@ -1,8 +1,5 @@
 import { userStub } from '../tests/stubs/user.stub';
 
-export const UsersService = jest.fn().mockReturnValue({
-  // getUserById: jest.fn().mockResolvedValue(userStub()),
-  // getUsers: jest.fn().mockResolvedValue([userStub()]),
-  // createUser: jest.fn().mockResolvedValue(userStub()),
+export const UserService = jest.fn().mockReturnValue({
   updateUser: jest.fn().mockResolvedValue(userStub()),
 });

@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
 import { CreateUserDTO } from './dtos/create-user.dto';
@@ -21,15 +19,15 @@ export class UserService {
     });
 
     return {
-      _id: userCreated._id.toHexString(),
+      _id: userCreated._id,
       username: userCreated.username,
       email: userCreated.email,
       roles: userCreated.roles,
     };
   }
 
-  async findUser(username: string): Promise<User | undefined> {
-    return this.userRepository.findOne({ username: username });
+  async findUser(email: string): Promise<User | undefined> {
+    return this.userRepository.findOne({ email });
   }
 
   async updateUser(id: string, updateUser: UpdateUserDTO): Promise<IUser> {
@@ -41,7 +39,7 @@ export class UserService {
     );
 
     return {
-      _id: id,
+      _id: userUpdated._id,
       username: userUpdated.username,
       email: userUpdated.email,
       roles: userUpdated.roles,
