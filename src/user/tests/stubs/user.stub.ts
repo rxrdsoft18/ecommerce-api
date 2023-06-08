@@ -1,11 +1,12 @@
 import { User } from '../../schemas/user.schema';
 import { Role } from '../../../auth/enums/role.enum';
+import { IUser } from '../../interfaces/user.interface';
 
-export const userStub = (): User => {
+export const userStub = (): IUser => {
   return {
+    _id: '123',
     username: 'rxrdsoft',
     email: 'email@email.com',
-    password: 'holamundo',
     roles: [Role.USER],
   };
 };

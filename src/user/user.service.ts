@@ -6,35 +6,42 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { User } from './schemas/user.schema';
 import { UpdateUserDTO } from './dtos/update-user.dto';
+import { UserRepository } from './user.repository';
+import { IUser } from './interfaces/user.interface';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-  async addUser(createUserDTO: CreateUserDTO): Promise<User> {
-    const newUser = await this.userModel.create(createUserDTO);
-    newUser.password = await bcrypt.hash(newUser.password, 10);
-    return newUser.save();
+  async addUser(createUserDTO: CreateUserDTO): Promise<IUser> {
+    const passwordHashed = await bcrypt.hash(createUserDTO.password, 10);
+    const userCreated = await this.userRepository.create({
+      ...createUserDTO,
+      password: passwordHashed,
+    });
+
+    return {
+      _id: userCreated._id.toHexString(),
+      username: userCreated.username,
+      email: userCreated.email,
+      roles: userCreated.roles,
+    };
   }
 
   async findUser(username: string): Promise<User | undefined> {
-    return this.userModel.findOne({ username: username });
+    return this.userRepository.findOne({ username: username });
   }
 
-  async updateUser(id: string, updateUser: UpdateUserDTO) {
-    const userUpdated = await this.userModel.findByIdAndUpdate(
+  async updateUser(id: string, updateUser: UpdateUserDTO): Promise<IUser> {
+    const userUpdated = await this.userRepository.findOneAndUpdate(
       {
         _id: id,
       },
       updateUser,
-      {
-        lean: true,
-      },
     );
 
     return {
+      _id: id,
       username: userUpdated.username,
       email: userUpdated.email,
       roles: userUpdated.roles,

@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../user.service';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 import { userStub } from './stubs/user.stub';
-import { getModelToken } from '@nestjs/mongoose';
-import { User } from '../schemas/user.schema';
+import { UserRepository } from '../user.repository';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -11,8 +10,20 @@ describe('UserService', () => {
   const mockAddUser: CreateUserDTO = {
     username: userStub().username,
     email: userStub().email,
-    password: userStub().password,
+    password: '123',
     roles: userStub().roles,
+  };
+
+  const mockUserFound = {
+    _id: userStub()._id,
+    username: userStub().username,
+    email: userStub().email,
+    roles: userStub().roles,
+  };
+
+  const mockUserRepository = {
+    findOne: jest.fn().mockImplementation(() => userStub()),
+    create: jest.fn().mockImplementation(),
   };
 
   beforeEach(async () => {
@@ -21,8 +32,8 @@ describe('UserService', () => {
       providers: [
         UserService,
         {
-          provide: getModelToken(User.name),
-          useValue: {},
+          provide: UserRepository,
+          useValue: mockUserRepository,
         },
       ],
       controllers: [],
@@ -35,9 +46,22 @@ describe('UserService', () => {
     test('should return user created', async () => {
       jest
         .spyOn(userService, 'addUser')
-        .mockImplementation(() => Promise.resolve(mockAddUser));
+        .mockImplementation(() => Promise.resolve(userStub()));
 
-      expect(await userService.addUser(userStub())).toBe(mockAddUser);
+      console.log(await userService.addUser(mockAddUser));
+      console.log(userStub());
+
+      expect(await userService.addUser(mockAddUser)).toBe(userStub());
     });
   });
+
+  // describe('findUser', () => {
+  //   test('should return the user found', async () => {
+  //     jest
+  //       .spyOn(userService, 'findUser')
+  //       .mockImplementation(() => Promise.resolve(mockUserFound));
+  //
+  //     expect(await userService.findUser(userStub()._id)).toBe(mockUserFound);
+  //   });
+  // });
 });
