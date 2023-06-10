@@ -30,4 +30,12 @@ $ yarn run start:dev
 
 ```
 
+## Running test
+
+```bash
+# unit test
+$ yarn test
+
+```
+
 
