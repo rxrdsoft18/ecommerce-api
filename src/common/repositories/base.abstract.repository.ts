@@ -14,7 +14,8 @@ export abstract class BaseAbstractRepository<
       ...document,
       _id: new Types.ObjectId(),
     });
-    return (await createdDocument.save(options)).toJSON() as unknown as T;
+    // return (await createdDocument.save(options)).toJSON() as unknown as T;
+    return createdDocument.save(options);
   }
 
   findOne(filterQuery: FilterQuery<T>) {
